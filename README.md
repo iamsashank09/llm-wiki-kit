@@ -36,6 +36,8 @@ Your agent calls `wiki_search`, reads the synthesis pages it wrote earlier, and 
 
 ### Install
 
+Requires Python 3.10+.
+
 ```bash
 # With uv (recommended)
 uv pip install git+https://github.com/iamsashank09/llm-wiki-kit.git
