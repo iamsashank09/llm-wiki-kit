@@ -34,17 +34,15 @@ class SearchIndex:
 
     def upsert_page(self, page_name: str, content: str) -> None:
         """Insert or update a page in the search index."""
-        cur = self.conn
-        # Delete existing entry if any
-        cur.execute(
+        self.conn.execute(
             "DELETE FROM pages_fts WHERE page_name = ?",
             (page_name,),
         )
-        cur.execute(
+        self.conn.execute(
             "INSERT INTO pages_fts (page_name, content) VALUES (?, ?)",
             (page_name, content),
         )
-        cur.commit()
+        self.conn.commit()
 
     def search(self, query: str, limit: int = 10) -> list[dict]:
         """Search for pages matching the query."""

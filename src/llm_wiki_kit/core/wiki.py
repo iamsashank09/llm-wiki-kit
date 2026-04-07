@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
-import json
 import re
 from datetime import datetime, timezone
 from pathlib import Path
 
-from llm_wiki_kit.core.extractors import ExtractedContent, detect_source_type, extract
+from llm_wiki_kit.core.extractors import extract
 from llm_wiki_kit.core.index import SearchIndex
 
 # Directory layout constants

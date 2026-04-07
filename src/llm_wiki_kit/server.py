@@ -9,6 +9,8 @@ from mcp.server.fastmcp import FastMCP
 
 from llm_wiki_kit.core.wiki import Wiki
 
+_wiki_cache: Wiki | None = None
+
 mcp = FastMCP(
     "llm-wiki-kit",
     instructions=(
@@ -21,9 +23,12 @@ mcp = FastMCP(
 
 
 def _get_wiki() -> Wiki:
-    """Get the Wiki instance from the configured root directory."""
-    root = os.environ.get("LLM_WIKI_ROOT", os.getcwd())
-    return Wiki(Path(root))
+    """Get the Wiki instance, cached to avoid reopening the DB on every call."""
+    global _wiki_cache
+    if _wiki_cache is None:
+        root = os.environ.get("LLM_WIKI_ROOT", os.getcwd())
+        _wiki_cache = Wiki(Path(root))
+    return _wiki_cache
 
 
 @mcp.tool()

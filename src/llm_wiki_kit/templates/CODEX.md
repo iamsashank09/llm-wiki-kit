@@ -13,7 +13,7 @@
 
 You have these tools via the `llm-wiki-kit` MCP server:
 
-- `wiki_ingest` — Read a source file and get instructions
+- `wiki_ingest` — Ingest a source (file path, URL, or YouTube link). Auto-detects format.
 - `wiki_write_page` — Create or update a wiki page
 - `wiki_read_page` — Read a wiki page
 - `wiki_search` — Full-text search across all pages

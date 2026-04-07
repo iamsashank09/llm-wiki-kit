@@ -210,12 +210,6 @@ def _extract_url(url: str) -> ExtractedContent:
             output_format="txt",
         ) or ""
 
-        metadata_result = trafilatura.extract(
-            downloaded,
-            only_with_metadata=True,
-            output_format="xmltei",
-        )
-
         title = url
         title_match = re.search(r"<title[^>]*>(.+?)</title>", downloaded, re.IGNORECASE)
         if title_match:
