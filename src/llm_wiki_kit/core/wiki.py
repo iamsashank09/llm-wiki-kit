@@ -7,6 +7,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
+from llm_wiki_kit.core.extractors import ExtractedContent, detect_source_type, extract
 from llm_wiki_kit.core.index import SearchIndex
 
 # Directory layout constants
@@ -76,31 +77,37 @@ class Wiki:
             f"  WIKI.md  → schema for {agent}\n"
         )
 
-    def ingest_source(self, file_path: str) -> dict:
-        """Register a source file and return its content for LLM processing."""
-        source = Path(file_path)
+    def ingest_source(self, source: str) -> dict:
+        """Ingest a source (file path, URL, or YouTube link) and return extracted content."""
+        result = extract(source, wiki_root=self.root)
 
-        # Accept absolute paths or paths relative to wiki root
-        if not source.is_absolute():
-            source = self.root / source
+        if result.source_type == "error":
+            return {"error": result.metadata.get("error", "Unknown extraction error")}
 
-        if not source.exists():
-            return {"error": f"File not found: {source}"}
-
-        content = source.read_text(errors="replace")
+        # Save URL-sourced content to raw/ for persistence
+        source_name = result.title
+        if result.source_type in ("url", "youtube"):
+            safe_name = self._slugify(result.title) + ".md"
+            saved_path = self.raw_dir / safe_name
+            saved_path.write_text(result.text)
+            source_name = safe_name
+        else:
+            source_name = Path(source).name
 
         # Get current wiki state for context
         index_content = ""
         if self.index_file.exists():
             index_content = self.index_file.read_text()
 
-        self.append_log("ingest", f"Source: {source.name}")
+        self.append_log("ingest", f"Source ({result.source_type}): {result.title}")
 
         return {
-            "source_name": source.name,
-            "source_path": str(source),
-            "content": content,
-            "content_length": len(content),
+            "source_name": source_name,
+            "source_type": result.source_type,
+            "title": result.title,
+            "content": result.text,
+            "content_length": result.content_length,
+            "metadata": result.metadata,
             "current_index": index_content,
             "instructions": (
                 "You have received a new source document. Please:\n"
@@ -111,6 +118,12 @@ class Wiki:
                 "5. Log what you did using wiki_log"
             ),
         }
+
+    @staticmethod
+    def _slugify(text: str) -> str:
+        """Convert text to a filesystem-safe slug."""
+        slug = re.sub(r"[^\w\s-]", "", text.lower())
+        return re.sub(r"[\s_-]+", "-", slug).strip("-")[:80]
 
     def write_page(self, page_name: str, content: str) -> str:
         """Write or update a wiki page and re-index it."""

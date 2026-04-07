@@ -39,11 +39,20 @@ Your agent calls `wiki_search`, reads the synthesis pages it wrote earlier, and 
 Requires Python 3.10+.
 
 ```bash
-# With uv (recommended)
+# Base install (markdown, text, HTML files)
 uv pip install git+https://github.com/iamsashank09/llm-wiki-kit.git
 
-# With pip
-pip install git+https://github.com/iamsashank09/llm-wiki-kit.git
+# With PDF support
+uv pip install "llm-wiki-kit[pdf] @ git+https://github.com/iamsashank09/llm-wiki-kit.git"
+
+# With web article extraction
+uv pip install "llm-wiki-kit[web] @ git+https://github.com/iamsashank09/llm-wiki-kit.git"
+
+# With YouTube transcript support
+uv pip install "llm-wiki-kit[youtube] @ git+https://github.com/iamsashank09/llm-wiki-kit.git"
+
+# Everything
+uv pip install "llm-wiki-kit[all] @ git+https://github.com/iamsashank09/llm-wiki-kit.git"
 ```
 
 > **Note:** PyPI publishing is coming soon. For now, install directly from GitHub.
@@ -159,6 +168,20 @@ Once connected, your LLM agent has these tools:
 3. The agent reads it, creates wiki pages, cross-references related concepts, updates the index
 4. Ask questions: *"How does X relate to Y?"* and the agent searches the wiki and synthesizes
 5. Periodically: *"Run a lint pass"* to catch broken links, orphan pages, and contradictions
+
+## Supported Formats
+
+`wiki_ingest` auto-detects the source type and extracts content accordingly:
+
+| Format | Input | Extra Dependency |
+|---|---|---|
+| Markdown / Text | `raw/notes.md` | None |
+| HTML | `raw/page.html` | None (basic) or `[web]` (smart) |
+| PDF | `raw/paper.pdf` | `pip install 'llm-wiki-kit[pdf]'` |
+| Web article | `https://example.com/article` | `pip install 'llm-wiki-kit[web]'` |
+| YouTube | `https://youtube.com/watch?v=...` | `pip install 'llm-wiki-kit[youtube]'` |
+
+URL and YouTube sources are automatically saved to `raw/` for persistence. If an optional dependency isn't installed, you get a clear error message telling you exactly what to install.
 
 ## Architecture
 

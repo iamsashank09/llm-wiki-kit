@@ -41,17 +41,22 @@ def wiki_init(agent: str = "claude") -> str:
 
 
 @mcp.tool()
-def wiki_ingest(file_path: str) -> dict:
-    """Ingest a source document into the wiki.
+def wiki_ingest(source: str) -> dict:
+    """Ingest a source into the wiki.
 
-    Reads the source file and returns its content along with the current
-    wiki index. You should then create/update wiki pages based on the content.
+    Supports multiple formats:
+    - Local files: markdown, text, HTML, PDF (requires `pip install 'llm-wiki-kit[pdf]'`)
+    - Web URLs: articles, blog posts (requires `pip install 'llm-wiki-kit[web]'`)
+    - YouTube: video transcripts (requires `pip install 'llm-wiki-kit[youtube]'`)
+
+    The source type is auto-detected. Returns extracted content along with
+    the current wiki index. You should then create/update wiki pages.
 
     Args:
-        file_path: Path to the source file (absolute, or relative to wiki root).
+        source: File path, URL, or YouTube link.
     """
     wiki = _get_wiki()
-    return wiki.ingest_source(file_path)
+    return wiki.ingest_source(source)
 
 
 @mcp.tool()

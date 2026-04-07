@@ -28,6 +28,16 @@ dependencies = [
     "mcp[cli]>=1.0.0",
 ]
 
+[project.optional-dependencies]
+pdf = ["pymupdf>=1.24.0"]
+web = ["trafilatura>=1.0.0"]
+youtube = ["youtube-transcript-api>=0.6.0"]
+all = [
+    "pymupdf>=1.24.0",
+    "trafilatura>=1.0.0",
+    "youtube-transcript-api>=0.6.0",
+]
+
 [project.scripts]
 llm-wiki-kit = "llm_wiki_kit.cli:main"
 
@@ -35,6 +45,6 @@ llm-wiki-kit = "llm_wiki_kit.cli:main"
 packages = ["src/llm_wiki_kit"]
 
 [project.urls]
-Homepage = "https://github.com/sashank/llm-wiki-kit"
-Repository = "https://github.com/sashank/llm-wiki-kit"
-Issues = "https://github.com/sashank/llm-wiki-kit/issues"
+Homepage = "https://github.com/iamsashank09/llm-wiki-kit"
+Repository = "https://github.com/iamsashank09/llm-wiki-kit"
+Issues = "https://github.com/iamsashank09/llm-wiki-kit/issues"
