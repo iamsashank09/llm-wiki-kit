@@ -1,82 +1,43 @@
 # LLM Wiki Schema
 
-> This file tells Cursor how to maintain this wiki. Read it before any wiki operation.
+> This file tells Cursor how to maintain this wiki. **Customize it for your domain.**
 
-## Directory Structure
+## Structure
 
-- `raw/` — Source documents. **Immutable.** Never modify these.
-- `wiki/` — LLM-maintained wiki pages. You own this directory entirely.
-- `wiki/index.md` — Master index of all pages with one-line summaries.
-- `wiki/log.md` — Chronological log of all operations.
+- `raw/` — Source documents. **Immutable.**
+- `wiki/` — LLM-maintained pages.
+- `wiki/index.md` — Master index.
+- `wiki/log.md` — Operation log.
 
-### Recommended Folders
+Suggested folders: `sources/`, `concepts/`. Create others as needed. Use **kebab-case** filenames.
 
-```
-wiki/
-├── sources/      # One page per ingested source
-├── concepts/     # Ideas, theories, techniques
-├── entities/     # People, orgs, products
-├── synthesis/    # Cross-source analysis
-├── index.md
-└── log.md
-```
+## MCP Tools
 
-Use **kebab-case** for filenames: `attention-mechanism.md`
+- `wiki_ingest` — Ingest a source (file, URL, YouTube)
+- `wiki_write_page` / `wiki_read_page` — Create/read pages
+- `wiki_search` — Full-text search
+- `wiki_lint` — Find broken links, orphans
+- `wiki_status` — Wiki overview
+- `wiki_log` — Append to log
+- `wiki_graph` — Generate knowledge graph HTML
 
-## MCP Tools Available
+## Page Format
 
-You have these tools via the `llm-wiki-kit` MCP server:
+- Start with `# Title`
+- Use `[[Cross-References]]` to link pages
+- Optional `sources:` frontmatter to track where info came from
 
-- `wiki_ingest` — Ingest a source (file path, URL, or YouTube link). Auto-detects format.
-- `wiki_write_page` — Create or update a wiki page
-- `wiki_read_page` — Read a wiki page
-- `wiki_search` — Full-text search across all pages
-- `wiki_lint` — Health-check for broken links, orphans, etc.
-- `wiki_status` — Overview of the wiki
-- `wiki_log` — Append to the chronological log
-- `wiki_graph` — Generate an interactive HTML visualization of the knowledge graph
+## Workflows
 
-## Conventions
+**Ingest:** `wiki_ingest` → create source summary → create/update concept pages → update index
 
-### Page Format
-- Each page starts with a `# Title` header
-- Use `[[Page Name]]` for cross-references to other wiki pages
-- Add YAML frontmatter for metadata when useful
+**Query:** `wiki_search` → `wiki_read_page` → synthesize answer with citations
 
-### Page Types
-- **Source summaries** (`sources/`) — One per ingested source. Include summary, key points, cross-refs.
-- **Concept pages** (`concepts/`) — Ideas, theories, patterns. Link to sources.
-- **Entity pages** (`entities/`) — People, organizations, products
-- **Synthesis pages** (`synthesis/`) — Cross-source analysis
-
-### Workflows
-
-#### Ingest
-1. Call `wiki_ingest` with file path, URL, or YouTube link
-2. Create source summary in `sources/`
-3. Create/update concept and entity pages
-4. Cross-reference with `[[Page Name]]`
-5. Update `wiki/index.md`
-6. Log with `wiki_log`
-
-#### Update existing pages
-When new source adds context: add to `sources:` frontmatter, weave in new info, link to new source page.
-
-#### Query
-1. `wiki_search` for relevant pages
-2. `wiki_read_page` for details
-3. Synthesize with citations: `*Sources: [[page1]], [[page2]]*`
-4. For complex questions, create a `synthesis/` page
-
-#### Lint
-1. `wiki_lint` to find issues
-2. Fix broken links, empty pages, orphans
-3. Log the lint pass
+**Lint:** `wiki_lint` → fix broken links → flesh out stubs
 
 ## Principles
 
-- The wiki compounds — connect new content to existing pages
+- Connect new content to existing pages
 - Cross-reference aggressively with `[[brackets]]`
-- Flag contradictions explicitly
+- Flag contradictions between sources
 - Keep index.md current
-- Log everything
