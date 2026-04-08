@@ -9,6 +9,20 @@
 - `wiki/index.md` — Master index of all pages with one-line summaries.
 - `wiki/log.md` — Chronological log of all operations.
 
+### Recommended Folders
+
+```
+wiki/
+├── sources/      # One page per ingested source
+├── concepts/     # Ideas, theories, techniques
+├── entities/     # People, orgs, products
+├── synthesis/    # Cross-source analysis
+├── index.md
+└── log.md
+```
+
+Use **kebab-case** for filenames: `attention-mechanism.md`
+
 ## MCP Tools Available
 
 You have these tools via the `llm-wiki-kit` MCP server:
@@ -30,26 +44,29 @@ You have these tools via the `llm-wiki-kit` MCP server:
 - Add YAML frontmatter for metadata when useful
 
 ### Page Types
-- **Source summaries** — One per ingested source
-- **Entity pages** — People, organizations, products
-- **Concept pages** — Ideas, theories, patterns
-- **Comparison pages** — Structured comparisons
-- **Synthesis pages** — Cross-cutting analysis
+- **Source summaries** (`sources/`) — One per ingested source. Include summary, key points, cross-refs.
+- **Concept pages** (`concepts/`) — Ideas, theories, patterns. Link to sources.
+- **Entity pages** (`entities/`) — People, organizations, products
+- **Synthesis pages** (`synthesis/`) — Cross-source analysis
 
 ### Workflows
 
 #### Ingest
-1. Call `wiki_ingest` with the file path
-2. Create a source summary page
-3. Create/update entity and concept pages
+1. Call `wiki_ingest` with file path, URL, or YouTube link
+2. Create source summary in `sources/`
+3. Create/update concept and entity pages
 4. Cross-reference with `[[Page Name]]`
 5. Update `wiki/index.md`
 6. Log with `wiki_log`
 
+#### Update existing pages
+When new source adds context: add to `sources:` frontmatter, weave in new info, link to new source page.
+
 #### Query
 1. `wiki_search` for relevant pages
 2. `wiki_read_page` for details
-3. Synthesize with citations
+3. Synthesize with citations: `*Sources: [[page1]], [[page2]]*`
+4. For complex questions, create a `synthesis/` page
 
 #### Lint
 1. `wiki_lint` to find issues
