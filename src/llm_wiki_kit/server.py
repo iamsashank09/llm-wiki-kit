@@ -135,3 +135,16 @@ def wiki_log(operation: str, details: str) -> str:
     """
     wiki = _get_wiki()
     return wiki.append_log(operation, details)
+
+
+@mcp.tool()
+def wiki_graph() -> dict:
+    """Generate an interactive HTML visualization of the wiki's knowledge graph.
+
+    Creates a force-directed graph showing all pages and their [[links]].
+    Opens in your browser — great for seeing how concepts connect.
+
+    Returns the path to the generated HTML file.
+    """
+    wiki = _get_wiki()
+    return wiki.generate_graph()

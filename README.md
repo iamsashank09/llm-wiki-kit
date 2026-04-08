@@ -131,6 +131,7 @@ Your agent now has **persistent memory** that survives across sessions.
 | **Persistent across sessions** | Start fresh chats without losing context |
 | **Full-text search** | Agent finds relevant pages instantly (SQLite FTS5) |
 | **Health checks** | `wiki_lint` catches broken links, orphan pages, contradictions |
+| **Graph visualization** | `wiki_graph` generates an interactive HTML map of your knowledge |
 | **Zero lock-in** | It's just markdown files in a folder — view in Obsidian, VS Code, anywhere |
 | **Works with any MCP agent** | Claude, Codex, Cursor, Windsurf, and more |
 
@@ -201,6 +202,7 @@ Your agent gets these MCP tools:
 | `wiki_lint` | Find broken links, orphans, empty pages |
 | `wiki_status` | Overview: page count, sources, recent activity |
 | `wiki_log` | Append to the operation log |
+| `wiki_graph` | Generate interactive HTML graph visualization |
 
 ---
 

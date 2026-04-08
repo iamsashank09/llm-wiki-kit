@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from llm_wiki_kit.core.extractors import extract
+from llm_wiki_kit.core.graph import extract_graph_data, generate_graph_html
 from llm_wiki_kit.core.index import SearchIndex
 
 # Directory layout constants
@@ -240,6 +241,27 @@ class Wiki:
             "pages": [p.stem for p in pages],
             "sources": [s.name for s in sources],
             "recent_log": recent_log,
+        }
+
+    def generate_graph(self, output_name: str = "wiki-graph.html") -> dict:
+        """Generate an interactive HTML visualization of the wiki graph."""
+        if not self.is_initialized:
+            return {"error": "Wiki not initialized. Run wiki_init first."}
+
+        graph_data = extract_graph_data(self.wiki_dir)
+        
+        if not graph_data.nodes:
+            return {"error": "No pages found in wiki. Ingest some sources first."}
+
+        html_content = generate_graph_html(graph_data, title="Wiki Graph")
+        output_path = self.root / output_name
+        output_path.write_text(html_content)
+
+        return {
+            "path": str(output_path),
+            "node_count": len(graph_data.nodes),
+            "edge_count": len(graph_data.edges),
+            "message": f"Graph generated with {len(graph_data.nodes)} pages and {len(graph_data.edges)} connections.",
         }
 
     def append_log(self, operation: str, details: str) -> str:
