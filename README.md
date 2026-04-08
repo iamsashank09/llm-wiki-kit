@@ -11,7 +11,11 @@
 
 Based on [Karpathy's LLM Wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f). Works with Claude, Codex, Cursor, Windsurf, and any MCP-compatible agent.
 
-<!-- DEMO VIDEO: drag and drop here -->
+
+
+https://github.com/user-attachments/assets/8814a581-1832-4e94-a5df-9e9b6b041507
+
+
 
 ---
 
@@ -195,7 +199,8 @@ The agent reads raw sources, writes wiki pages, and maintains the connections. Y
 
 `wiki_graph` generates an interactive HTML visualization of your wiki's structure:
 
-<!-- GRAPH SCREENSHOT: drag and drop here -->
+<img width="1918" height="908" alt="llm-wiki-kit-graph" src="https://github.com/user-attachments/assets/66ae92e0-f1c9-479c-bcb2-76da9af38b1f" />
+
 
 Nodes are color-coded by type (sources, concepts, synthesis). Click and drag to explore connections.
 
