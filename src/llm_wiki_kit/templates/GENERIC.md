@@ -1,43 +1,81 @@
 # LLM Wiki Schema
 
-> This file tells your LLM how to maintain this wiki. **Customize it for your domain.**
+> This file tells your LLM how to maintain this wiki. **Feel free to customize it for your domain.**
 
-## Structure
+## Directory Structure
 
-- `raw/` — Source documents. **Immutable.**
-- `wiki/` — LLM-maintained pages.
-- `wiki/index.md` — Master index.
-- `wiki/log.md` — Operation log.
+- `raw/` — Source documents. **Immutable.** Never modify these.
+- `wiki/` — LLM-maintained wiki pages. You own this directory entirely.
+- `wiki/index.md` — Master index of all pages with one-line summaries.
+- `wiki/log.md` — Chronological log of all operations.
 
-Suggested folders: `sources/`, `concepts/`. Create others as needed. Use **kebab-case** filenames.
+### Suggested Folders
+
+```
+wiki/
+├── sources/      # One page per ingested source
+├── concepts/     # Ideas, theories, techniques
+├── index.md
+└── log.md
+```
+
+Create other folders as needed (`entities/`, `synthesis/`, etc). Use **kebab-case** filenames.
 
 ## MCP Tools
 
-- `wiki_ingest` — Ingest a source (file, URL, YouTube)
-- `wiki_write_page` / `wiki_read_page` — Create/read pages
-- `wiki_search` — Full-text search
-- `wiki_lint` — Find broken links, orphans
-- `wiki_status` — Wiki overview
-- `wiki_log` — Append to log
-- `wiki_graph` — Generate knowledge graph HTML
+- `wiki_ingest` — Ingest a source (file path, URL, or YouTube link)
+- `wiki_write_page` — Create or update a wiki page
+- `wiki_read_page` — Read a wiki page
+- `wiki_search` — Full-text search across all pages
+- `wiki_lint` — Health-check for broken links, orphans, etc.
+- `wiki_status` — Overview of the wiki
+- `wiki_log` — Append to the chronological log
+- `wiki_graph` — Generate interactive HTML knowledge graph
 
 ## Page Format
 
-- Start with `# Title`
-- Use `[[Cross-References]]` to link pages
-- Optional `sources:` frontmatter to track where info came from
+Each page should have:
+- A `# Title` header
+- `[[Cross-References]]` to related pages
+- Optional frontmatter for tracking sources:
+  ```yaml
+  ---
+  sources: [paper.pdf, video.md]
+  ---
+  ```
+
+### Page Types
+
+**Source summaries** — One per ingested source. Key takeaways, notable claims, links to concepts.
+
+**Concept pages** — Ideas, theories, techniques. Link back to sources that discuss them.
+
+**Synthesis pages** — When you need to compare/connect multiple sources on a topic.
 
 ## Workflows
 
-**Ingest:** `wiki_ingest` → create source summary → create/update concept pages → update index
+### Ingest
+1. `wiki_ingest` the file/URL/YouTube link
+2. Create a source summary in `sources/`
+3. Create or update concept pages
+4. Add `[[cross-references]]` liberally
+5. Update `index.md`
 
-**Query:** `wiki_search` → `wiki_read_page` → synthesize answer with citations
+### Update existing pages
+When a new source adds context to an existing page:
+- Add it to `sources:` frontmatter
+- Weave in new information (don't just append)
+- Link to the new source page
 
-**Lint:** `wiki_lint` → fix broken links → flesh out stubs
+### Answer questions
+1. `wiki_search` for relevant terms
+2. `wiki_read_page` the top results
+3. Cite your sources: `*See [[page1]], [[page2]]*`
+4. For complex cross-source questions, consider creating a synthesis page
 
 ## Principles
 
-- Connect new content to existing pages
-- Cross-reference aggressively with `[[brackets]]`
-- Flag contradictions between sources
-- Keep index.md current
+- **The wiki compounds.** Connect new content to existing pages.
+- **Cross-reference aggressively.** The value is in the links.
+- **Flag contradictions.** If sources disagree, note it explicitly.
+- **Keep index.md current.** It's the table of contents.
